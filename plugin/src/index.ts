@@ -4,16 +4,23 @@ import {
   withProjectBuildGradle,
   withSettingsGradle,
   withStringsXml,
+  withAndroidManifest,
 } from '@expo/config-plugins';
 import type { ConfigPlugin } from '@expo/config-plugins';
+import type { PluginSettings } from './types';
+import { withMetaQuest } from './metaQuest';
 
-const withUnity: ConfigPlugin<{ name?: string }> = (
+const withUnity: ConfigPlugin<PluginSettings> = (
   config,
-  { name = 'react-native-unity' } = {}
+  { name = 'react-native-unity', unityExportDir, quest } = {}
 ) => {
   config.name = name;
+  config = withXmlnsTools(config);
+  if (quest && quest.enabled !== false) {
+    config = withMetaQuest(config, quest);
+  }
   config = withProjectBuildGradleMod(config);
-  config = withSettingsGradleMod(config);
+  config = withSettingsGradleMod(config, { unityExportDir });
   config = withGradlePropertiesMod(config);
   config = withStringsXMLMod(config);
   return config;
@@ -28,7 +35,7 @@ const withProjectBuildGradleMod: ConfigPlugin = (config) =>
       modConfig.modResults.contents = modConfig.modResults.contents.replace(
         REPOSITORIES_END_LINE,
         REPOSITORIES_END_LINE +
-          '\nflatDir { dirs "${project(\':unityLibrary\').projectDir}/libs" }\n'
+        '\nflatDir { dirs "${project(\':unityLibrary\').projectDir}/libs" }\n'
       );
     } else {
       throw new Error(
@@ -38,11 +45,11 @@ const withProjectBuildGradleMod: ConfigPlugin = (config) =>
     return modConfig;
   });
 
-const withSettingsGradleMod: ConfigPlugin = (config) =>
+const withSettingsGradleMod: ConfigPlugin<{ unityExportDir: PluginSettings['unityExportDir'] }> = (config, { unityExportDir }) =>
   withSettingsGradle(config, (modConfig) => {
     modConfig.modResults.contents += `
 include ':unityLibrary'
-project(':unityLibrary').projectDir=new File('../unity/builds/android/unityLibrary')
+project(':unityLibrary').projectDir=new File('${unityExportDir}')
     `;
     return modConfig;
   });
@@ -71,6 +78,22 @@ const withStringsXMLMod: ConfigPlugin = (config) =>
       ],
       config.modResults
     );
+    return config;
+  });
+
+const withXmlnsTools: ConfigPlugin = (config) =>
+  withAndroidManifest(config, (config) => {
+    const androidManifest = config.modResults;
+    if (androidManifest && androidManifest.manifest) {
+      const manifestTag = androidManifest.manifest['$'];
+
+      // console.log(androidManifest);
+      // Add the xmlns:tools attribute if it doesn't exist
+      if (!manifestTag['xmlns:tools']) {
+        manifestTag['xmlns:tools'] = 'http://schemas.android.com/tools';
+      }
+    }
+
     return config;
   });
 
