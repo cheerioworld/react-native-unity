@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@azesmway/react-native-unity": {
+      "signature": "4db546e70b5a23ec082c9f796aa54fb6",
+      "link": true
+    }
+  }
+}

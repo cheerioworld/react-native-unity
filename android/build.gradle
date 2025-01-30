@@ -108,7 +108,9 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation project(':unityLibrary')
-  implementation files("${project(':unityLibrary').projectDir}/libs/unity-classes.jar")
+
+  // Removing this dependency because unity-classes.jar is bundled into :unityLibrary's built AAR
+  // implementation files("${project(':unityLibrary').projectDir}/libs/unity-classes.jar")
 }
 
 if (isNewArchitectureEnabled()) {
