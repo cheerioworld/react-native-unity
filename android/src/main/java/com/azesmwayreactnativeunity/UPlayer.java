@@ -93,11 +93,16 @@ public class UPlayer {
 
     public FrameLayout requestFrame() throws NoSuchMethodException {
         try {
+            //Attempt to invoke getFrameLayout() for the newer UnityPlayer class
             Method getFrameLayout = unityPlayer.getClass().getMethod("getFrameLayout");
-
             return (FrameLayout) getFrameLayout.invoke(unityPlayer);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            return unityPlayer;
+            // If it is old UnityPlayer, use isInstance() and cast() to bypass incompatible type checks when compiling using newer versions of UnityPlayer
+            if (FrameLayout.class.isInstance(unityPlayer)) {
+                return FrameLayout.class.cast(unityPlayer);
+            } else {
+                return null;
+            }
         }
     }
 
