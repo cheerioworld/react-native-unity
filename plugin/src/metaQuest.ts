@@ -12,20 +12,10 @@ import type { QuestSettings } from './types';
 
 export const withMetaQuest: ConfigPlugin<QuestSettings> = (config, questProps) => {
   config = withQuestAndroidManifestMod(config, questProps);
-  config = withXRSettingsGradleMod(config);
   config = withQuestGradlePropertiesMod(config);
   return config;
 };
 
-
-const withXRSettingsGradleMod: ConfigPlugin = (config) =>
-  withSettingsGradle(config, (modConfig) => {
-    // console.log('HERE');
-    modConfig.modResults.contents += `
-include 'unityLibrary:xrmanifest.androidlib' // VR_ONLY
-    `;
-    return modConfig;
-  });
 
 const withQuestAndroidManifestMod: ConfigPlugin<
   QuestSettings | undefined

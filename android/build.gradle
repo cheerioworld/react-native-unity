@@ -14,6 +14,7 @@ def isNewArchitectureEnabled() {
 }
 
 apply plugin: "com.android.library"
+apply plugin: 'org.jetbrains.kotlin.android'
 
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
@@ -88,6 +89,9 @@ android {
       }
     }
   }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 }
 
 repositories {
@@ -108,9 +112,10 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation project(':unityLibrary')
+  implementation 'androidx.core:core-ktx:1.15.0'
 
-  // Removing this dependency because unity-classes.jar is bundled into :unityLibrary's built AAR
-  // implementation files("${project(':unityLibrary').projectDir}/libs/unity-classes.jar")
+    // Removing this dependency because unity-classes.jar is bundled into :unityLibrary's built AAR
+   implementation files("${project(':unityLibrary').projectDir}/libs/unity-classes.jar")
 }
 
 if (isNewArchitectureEnabled()) {

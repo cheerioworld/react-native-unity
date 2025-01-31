@@ -48,7 +48,7 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib expo-example/android/build expo-example/android/app/build",
     "prepare": "bob build",
     "release": "release-it",
-    "mount": "mount --bind ./ ./expo-example/node_modules/@azesmway/react-native-unity"
+    "push": "yalc publish --push"
   },
   "keywords": [
     "react-native",

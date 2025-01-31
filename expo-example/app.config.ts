@@ -40,8 +40,12 @@ export default (): ExpoConfig => ({
     [
       '../app.plugin.js',
       {
+        // unityExportDir:
+        //   '/Users/solarisn/dev/Cheerio/react-native-unity/expo-example/build',
+        // unityExportDir:
+        //   '/Users/solarisn/dev/Cheerio/nevermet-vr/build/testing-1',
         unityExportDir:
-          '/Users/solarisn/dev/Cheerio/react-native-unity/expo-example/build',
+          '/Users/solarisn/dev/Cheerio/nevermet-vr/build/FINAL',
         quest: {
           panel: {
             freeResizing: {
